@@ -1,43 +1,58 @@
 #!/usr/bin/env php
 
 <?php
-//declare(strict_types = 1);
+$months_name = [ 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь' ];
+echo $months_name[date('n') - 1] . PHP_EOL; // Выведет название месяца
 
-//$date = date_create_from_format('Y-m-d', '2024-12-01');
-//date_modify($date, '+1 month');
-//var_dump(date_format($date, 'Y-m-d'));
-//echo $date_format = date_format($date, 'Y-m-d') . PHP_EOL;
+function dates_month($month, $year):array {
+    $num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    $dates_month = array();
 
-$date = DateTime::createFromFormat('Y-m-d', '2024-12-01');
-$date->modify('+1 month');
-echo $date->format('d-m-Y') . PHP_EOL;
 
-$months_name = [ 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря' ];
-// Массив с названиями месяцев
-echo date('d '.$months_name[date('n') - 1]); // Выведет день и название месяца на русском языке
-echo '' . PHP_EOL;
-echo $months_name[date('n') - 1] . PHP_EOL; // Выведет только название месяца на русском языке
+        for ($i = 1; $i <= $num; $i++) {
+            $mktime = mktime(0, 0, 0, $month, $i, $year);
+            $date = date("d-M-Y", $mktime);
 
-$workdays = array();
-$type = CAL_GREGORIAN;
-$month = date('n'); // Идентификатор месяца (от 1 до 12).
-$year = date('Y'); // Год в четырёхзначном формате 2024 года.
-//$day_count = cal_days_in_month($type, $month, $year); // Получить количество дней
+            $get_name = date('l', strtotime($date)); // Получить день недели
+            $day_name = substr($get_name, 0, 3); // Обрезать название дня до трёх символов
+            if($day_name != 'Sun' && $day_name != 'Sat') {
+                $dates_month[$i] = "\033[32m $date \033[0m"; //Зеленый нерабочий день
+            }
+            if($day_name == 'Sun' || $day_name == 'Sat') {
+                $dates_month[$i] = "\033[32m $date \033[0m";
+            }
+        }
+    for ($i = 1; $i <= $num; $i=$i+3) {
+        $mktime = mktime(0, 0, 0, $month, $i, $year);
+        $date = date("d-M-Y", $mktime);
 
-//for ($i = 1; $i <= $day_count; $i++) {
-    for ($i = 1; $i <= 1; $i++) {
-    $date = $year.'/'.$month.'/'.$i; // Отформатировать дату
-    $get_name = date('l', strtotime($date)); // Получить день недели
-    $day_name = substr($get_name, 0, 3); // Обрезать название дня до трёх символов
-    if($day_name != 'Sun' && $day_name != 'Sat'){
-        $workdays [] = $i;
+        $get_name = date('l', strtotime($date)); // Получить день недели
+        $day_name = substr($get_name, 0, 3); // Обрезать название дня до трёх символов
+
+        //if($day_name == 'Sun' || $day_name == 'Sat') {
+        if($day_name != 'Sun' && $day_name != 'Sat') {
+            $dates_month[$i] = "\033[31m $date \033[0m"; //Красный рабочий день
+        }
     }
+
+    return $dates_month;
 }
-print_r($workdays);
+print_r(dates_month(12, 2024));
 
-echo "\033[31m красный \033[0m";
-echo "\033[32m зелёный \033[0m";
 
-cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
-date('t');
+//$workdays = array();
+//$month = date('n'); // Идентификатор месяца (от 1 до 12).
+//$year = date('Y'); // Год в четырёхзначном формате 2024 года.
+//$num = cal_days_in_month(CAL_GREGORIAN, $month, $year); // Получить количество дней
+//
+//for ($i = 1; $i <= $num; $i++) {
+//    $date = $year.'/'.$month.'/'.$i; // Отформатировать дату
+//    $get_name = date('l', strtotime($date)); // Получить день недели
+//    $day_name = substr($get_name, 0, 3); // Обрезать название дня до трёх символов
+//    if($day_name != 'Sun' && $day_name != 'Sat') {
+//        $workdays [] = "\033[31m $i \033[0m";
+//    }
+//}
+//
+//print_r($workdays);
 ?>

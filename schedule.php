@@ -8,18 +8,34 @@ function dates_month($month, $year):array {
     $num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
     $dates_month = array();
 
+    $flag=1;
+    // $incomingDate = date_dreate($year . '-' . $month . '-1');
+    // echo (string) $incomingDate->format('d.m.Y');
+
     for ($i = 1; $i <= $num; $i++) {
         $mktime = mktime(0, 0, 0, $month, $i, $year);
         $date = date("d-M-Y", $mktime);
 
+        
+
         $get_name = date('l', strtotime($date)); // Получить день недели
         $day_name = substr($get_name, 0, 3); // Обрезать название дня до трёх символов
 
-        $dates_month[$i] = "\033[31m $date \033[0m"; //Красный рабочий день
+        $dates_month[$i] = "\033[32m $date \033[0m"; //Зеленый нерабочий день
         if($day_name == 'Sun' || $day_name == 'Sat') {
-            $dates_month[$i] = "\033[32m $date \033[0m"; //Зеленый нерабочий день
+            $dates_month[$i] = "\033[34m $date \033[0m"; //Синий день - Суббота и Воскресенье
+        } else {
+            if ($flag === 1) {
+                $dates_month[$i] = "\033[31m $date \033[0m"; //Красный рабочий день
+                $flag++;
+            }  else {
+                $dates_month[$i] = "\033[32m $date \033[0m"; //Зеленый нерабочий день
+                $flag === 2 ? $flag = 3 : $flag = 1;
+            }
         }
+     //   $incomingDate->modify('+1 day');
     }
+// }
     return $dates_month;
 }
 print_r(dates_month(12, 2024));

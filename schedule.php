@@ -18,7 +18,7 @@ function dates_month($month, $year):array {
 
         if($day_name == 'Sun' || $day_name == 'Sat') {
             $dates_month[$i] = "\033[34m $date \033[0m"; //Синий день - Суббота, Воскресенье
-        } else {
+        } else{
             if ($flag === 1) {
                 $dates_month[$i] = "\033[31m $date \033[0m"; //Красный день - рабочий
                 $flag++;
@@ -26,6 +26,9 @@ function dates_month($month, $year):array {
                 $dates_month[$i] = "\033[32m $date \033[0m"; //Зеленый день - нерабочий
                 $flag === 2 ? $flag = 3 : $flag = 1;
             }
+        }
+        if($day_name == 'Sat') {
+            $flag = 1;
         }
     }
     return $dates_month;
